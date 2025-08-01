@@ -9,6 +9,7 @@ const Navbar = () => {
       <button onClick={() => router("/register")}>Register</button>
       <button onClick={() => router("/use-state")}>UseState</button>
       <button onClick={() => router("/use-effect")}>UseEffect</button>
+      <button onClick={() => router("/use-params")}>UseParams</button>
     </>
   );
 };
