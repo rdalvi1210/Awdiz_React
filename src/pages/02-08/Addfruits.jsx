@@ -47,7 +47,7 @@ const Addfruits = () => {
     const updatedFruits = fruits.filter((fruit) => fruit.id !== deleteId);
     setFruits(updatedFruits);
     setDeleteId(null);
-    setPopup(false); // close modal after delete
+    setPopup(false);
   };
 
   const handleDeletecancel = () => {
