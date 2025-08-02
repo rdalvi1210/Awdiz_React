@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Todos from "./components/Todos";
 import Productpage from "./pages/01-08/Productpage";
 import Useparams from "./pages/01-08/Useparams";
+import Addfruits from "./pages/02-08/Addfruits";
 import Useeffect from "./pages/30-7/Useeffect";
 import UseState from "./pages/30-7/UseState";
 import Home from "./pages/Home";
@@ -23,6 +24,7 @@ function App() {
         <Route path="/use-params" element={<Useparams />} />
         <Route path="/products/:id" element={<Productpage />} />
         <Route path="/todos" element={<Todos />} />
+        <Route path="/add-fruits" element={<Addfruits />} />
       </Routes>
     </div>
   );
