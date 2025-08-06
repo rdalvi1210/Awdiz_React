@@ -4,6 +4,7 @@ import Todos from "./components/Todos";
 import Productpage from "./pages/01-08/Productpage";
 import Useparams from "./pages/01-08/Useparams";
 import Addfruits from "./pages/02-08/Addfruits";
+import Pagenotfound from "./pages/06-08/Pagenotfound";
 import Useeffect from "./pages/30-7/Useeffect";
 import UseState from "./pages/30-7/UseState";
 import Home from "./pages/Home";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/products/:id" element={<Productpage />} />
         <Route path="/todos" element={<Todos />} />
         <Route path="/add-fruits" element={<Addfruits />} />
+        <Route path="/*" element={<Pagenotfound />} />
       </Routes>
     </div>
   );
