@@ -11,6 +11,7 @@ const Navbar = () => {
       <button onClick={() => router("/use-effect")}>UseEffect</button>
       <button onClick={() => router("/use-params")}>UseParams</button>
       <button onClick={() => router("/fetchproducts")}>Fetch Products</button>
+      <button onClick={() => router("/mycart")}>My Cart</button>
     </>
   );
 };
