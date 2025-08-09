@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Prac from "./components/Prac";
 import Todos from "./components/Todos";
 import Productpage from "./pages/01-08/Productpage";
 import Useparams from "./pages/01-08/Useparams";
@@ -21,6 +22,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/prac" element={<Prac />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register" element={<Register />} />
