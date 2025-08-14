@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Memo from "./Memo";
 
-const UseCallback = () => {
+const Parent = () => {
   const [counter, setCounter] = useState(0);
   const [counter2, setCounter2] = useState(0);
 
@@ -17,4 +17,4 @@ const UseCallback = () => {
   );
 };
 
-export default UseCallback;
+export default Parent;

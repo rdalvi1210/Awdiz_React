@@ -10,8 +10,11 @@ import Pagenotfound from "./pages/06-08/Pagenotfound";
 import Mycart from "./pages/08-08/Mycart";
 import ProductInfo from "./pages/08-08/ProductInfo";
 import Products from "./pages/08-08/Products";
-import UseCallback from "./pages/10-08/UseCallback";
+import Parent from "./pages/10-08/Parent";
 import UseMemo from "./pages/10-08/UseMemo";
+import Usecallback from "./pages/13-08/Usecallback";
+import UseReducer from "./pages/13-08/UseReducer";
+import UseRef from "./pages/13-08/UseRef";
 import Useeffect from "./pages/30-7/Useeffect";
 import UseState from "./pages/30-7/UseState";
 import Home from "./pages/Home";
@@ -40,7 +43,10 @@ function App() {
         <Route path="/productsInfo/:productId" element={<ProductInfo />} />
         <Route path="/mycart" element={<Mycart />} />
         <Route path="/use-memo" element={<UseMemo />} />
-        <Route path="/use-callback" element={<UseCallback />} />
+        <Route path="/memo-method" element={<Parent />} />
+        <Route path="/use-callback" element={<Usecallback />} />
+        <Route path="/use-reducer" element={<UseReducer />} />
+        <Route path="/use-ref" element={<UseRef />} />
       </Routes>
     </div>
   );
