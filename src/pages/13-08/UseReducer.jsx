@@ -27,7 +27,7 @@ const UseReducer = () => {
         Increment +
       </button>
       <button
-        style={{ padding: "10px", cursor: "pointer", marginRight:"10px" }}
+        style={{ padding: "10px", cursor: "pointer", marginRight: "10px" }}
         onClick={() => dispatch({ type: "decrement" })}
       >
         Decrement -

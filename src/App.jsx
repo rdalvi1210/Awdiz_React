@@ -15,6 +15,8 @@ import UseMemo from "./pages/10-08/UseMemo";
 import Usecallback from "./pages/13-08/Usecallback";
 import UseReducer from "./pages/13-08/UseReducer";
 import UseRef from "./pages/13-08/UseRef";
+import Theme from "./pages/22-08/Assignment/Theme";
+import UseContext from "./pages/22-08/UseContext";
 import Useeffect from "./pages/30-7/Useeffect";
 import UseState from "./pages/30-7/UseState";
 import Home from "./pages/Home";
@@ -47,6 +49,8 @@ function App() {
         <Route path="/use-callback" element={<Usecallback />} />
         <Route path="/use-reducer" element={<UseReducer />} />
         <Route path="/use-ref" element={<UseRef />} />
+        <Route path="/use-context" element={<UseContext />} />
+        <Route path="/theme" element={<Theme />} />
       </Routes>
     </div>
   );
