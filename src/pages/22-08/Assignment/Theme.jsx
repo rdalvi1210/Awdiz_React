@@ -4,7 +4,6 @@ import { Context } from "../Context/ContextProvider";
 const Theme = () => {
   const { dispatchMode, apptheme } = useContext(Context);
 
-  // Define dynamic styles based on theme
   const containerStyle = {
     height: "500px",
     backgroundColor: apptheme === "light" ? "#ffffff" : "#000000",
@@ -19,7 +18,7 @@ const Theme = () => {
   };
 
   const handleTheme = () => {
-    dispatchMode({ type: "toggle" })
+    dispatchMode({ type: "toggle" });
   };
 
   return (

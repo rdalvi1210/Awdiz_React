@@ -22,6 +22,7 @@ import UseState from "./pages/30-7/UseState";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import CounterRedux from "./redux/CounterRedux";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         <Route path="/use-ref" element={<UseRef />} />
         <Route path="/use-context" element={<UseContext />} />
         <Route path="/theme" element={<Theme />} />
+        <Route path="/redux-counter" element={<CounterRedux />} />
       </Routes>
     </div>
   );

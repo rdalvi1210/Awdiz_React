@@ -17,6 +17,7 @@ const Navbar = () => {
       <button onClick={() => router("/use-callback")}>UseCallback</button>
       <button onClick={() => router("/use-reducer")}>UseReducer</button>
       <button onClick={() => router("/use-ref")}>UseRef</button>
+      <button onClick={() => router("/theme")}>UseContext</button>
     </>
   );
 };

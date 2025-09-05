@@ -19,7 +19,7 @@ function handleMode(state, action) {
   switch (action.type) {
     case "toggle":
       const newTheme = state.theme === "light" ? "dark" : "light";
-      localStorage.setItem("mode", JSON.stringify(newTheme)); // ✅ save on toggle
+      localStorage.setItem("mode", JSON.stringify(newTheme));
       return { theme: newTheme };
 
     default:
