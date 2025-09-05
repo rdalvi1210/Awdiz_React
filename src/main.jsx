@@ -4,14 +4,17 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 import ContextProvider from "./pages/22-08/Context/ContextProvider.jsx";
-import { store } from "./redux/Store.js";
+import { store } from "./pages/23-08/Assignment/redux/store.js";
+import CalculatorProvider from "./pages/30-08/Assignment/CalcContext/CalculatorContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <ContextProvider>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </ContextProvider>
+  <Provider store={store}>
+    <ContextProvider>
+      <CalculatorProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CalculatorProvider>
+    </ContextProvider>
+  </Provider>
 );

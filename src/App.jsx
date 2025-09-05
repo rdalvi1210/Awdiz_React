@@ -17,6 +17,8 @@ import UseReducer from "./pages/13-08/UseReducer";
 import UseRef from "./pages/13-08/UseRef";
 import Theme from "./pages/22-08/Assignment/Theme";
 import UseContext from "./pages/22-08/UseContext";
+import ProductList from "./pages/23-08/Assignment/redux/Productlist";
+import Calculator from "./pages/30-08/Assignment/Calculator";
 import Useeffect from "./pages/30-7/Useeffect";
 import UseState from "./pages/30-7/UseState";
 import Home from "./pages/Home";
@@ -53,6 +55,8 @@ function App() {
         <Route path="/use-context" element={<UseContext />} />
         <Route path="/theme" element={<Theme />} />
         <Route path="/redux-counter" element={<CounterRedux />} />
+        <Route path="/redux-addtocart" element={<ProductList />} />
+        <Route path="/calculator" element={<Calculator />} />
       </Routes>
     </div>
   );
