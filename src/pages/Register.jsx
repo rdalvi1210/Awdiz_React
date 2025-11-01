@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 const Register = () => {
@@ -14,7 +15,7 @@ const Register = () => {
     cpassword: false,
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let newErrors = {};
 
@@ -36,10 +37,23 @@ const Register = () => {
       return;
     }
 
-    alert("Submitted Successfully");
-    setUserData({ name: "", email: "", password: "", cpassword: "" });
-    setError({});
-    setPasshandle({ password: false, cpassword: false });
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/auth/register",
+        userData
+      );
+      console.log(res);
+      if (res.data.success) {
+        alert(res.data.message);
+        setUserData({ name: "", email: "", password: "", cpassword: "" });
+        setError({});
+        setPasshandle({ password: false, cpassword: false });
+      } else {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   };
 
   const handleChange = (e) => {

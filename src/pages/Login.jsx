@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/userSlice.js";
 
 const Login = () => {
   const [userData, setUserData] = useState({
@@ -8,8 +11,12 @@ const Login = () => {
 
   const [error, setError] = useState({});
   const [passhandle, setPasshandle] = useState(false);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
 
-  const handleSubmit = (e) => {
+  console.log(user);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let newErrors = {};
 
@@ -21,10 +28,25 @@ const Login = () => {
       return;
     }
 
-    alert("Login Successful");
-    setUserData({ email: "", password: "" });
-    setError({});
-    setPasshandle(false);
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/auth/login",
+        userData
+      );
+
+      if (res.data.success) {
+        dispatch(login(res.data.user));
+        alert(res.data.message);
+        setUserData({ email: "", password: "" });
+        setError({});
+        setPasshandle(false);
+      } else {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Login failed. Please try again.");
+    }
   };
 
   const handleChange = (e) => {
@@ -41,7 +63,9 @@ const Login = () => {
         border: "1px solid black",
       }}
     >
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Login</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+        Login User : {user?.username}
+      </h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "12px", textAlign: "left" }}>
           <label>Email:</label>
