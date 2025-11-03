@@ -18,6 +18,9 @@ import UseRef from "./pages/13-08/UseRef";
 import Theme from "./pages/22-08/Assignment/Theme";
 import UseContext from "./pages/22-08/UseContext";
 // import ProductList from "./pages/23-08/Assignment/redux/Productlist";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import api from "./axios/AxiosInstance";
 import Calculator from "./pages/30-08/Assignment/Calculator";
 import Useeffect from "./pages/30-7/Useeffect";
 import UseState from "./pages/30-7/UseState";
@@ -25,8 +28,22 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CounterRedux from "./redux/CounterRedux";
+import { setUser } from "./redux/userSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  const getUser = async () => {
+    const res = await api.get("/auth/getcurrentuser");
+    dispatch(setUser(res.data.user));
+  };
+
+  useEffect(() => {
+    if (!user) {
+      getUser();
+    }
+  }, []);
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <Navbar />

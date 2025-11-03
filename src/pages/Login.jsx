@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import api from "../axios/AxiosInstance.js";
 import { login } from "../redux/userSlice.js";
 
 const Login = () => {
@@ -29,8 +29,8 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/v1/auth/login",
+      const res = await api.post(
+        "/auth/login",
         userData
       );
 
@@ -64,7 +64,7 @@ const Login = () => {
       }}
     >
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Login User : {user?.username}
+        Login User : {user?.name}
       </h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "12px", textAlign: "left" }}>
