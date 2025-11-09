@@ -6,12 +6,20 @@ const ViewProducts = () => {
   const [seller, setSeller] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [form, setForm] = useState({
+    title: "",
+    category: "",
+    brand: "",
+    price: "",
+    description: "",
+  });
 
+  // Fetch products
   const fetchProducts = async () => {
     try {
       const res = await api.get("/products/getproducts");
       if (res.data.success) {
-        console.log(res.data);
         setProducts(res.data.products);
         setSeller(res.data.seller);
       } else {
@@ -28,6 +36,58 @@ const ViewProducts = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  // Handle Delete
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
+    try {
+      await api.delete(`/products/deleteproducts/${id}`);
+      setProducts((prev) => prev.filter((p) => p._id !== id));
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Error deleting product");
+    }
+  };
+
+  // Handle Edit Click
+  const handleEditClick = (product) => {
+    setEditingProduct(product);
+    setForm({
+      title: product.title,
+      category: product.category,
+      brand: product.brand,
+      price: product.price,
+      description: product.description,
+    });
+  };
+
+  // Handle Edit Save
+  const handleSaveEdit = async () => {
+    if (!form.title.trim() || !form.price) {
+      alert("Title and price are required");
+      return;
+    }
+    try {
+      const res = await api.put(
+        `/products/editproducts/${editingProduct._id}`,
+        form
+      );
+      if (res.data.success) {
+        setProducts((prev) =>
+          prev.map((p) =>
+            p._id === editingProduct._id ? { ...p, ...form } : p
+          )
+        );
+        setEditingProduct(null);
+      } else {
+        alert(res.data.message || "Failed to update product");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Error updating product");
+    }
+  };
 
   if (loading)
     return <p style={{ textAlign: "center", marginTop: "40px" }}>Loading...</p>;
@@ -113,6 +173,7 @@ const ViewProducts = () => {
                   boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
                   transition: "transform 0.25s ease, box-shadow 0.25s ease",
                   cursor: "pointer",
+                  position: "relative",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-6px)";
@@ -178,12 +239,144 @@ const ViewProducts = () => {
                       {new Date(product.createdAt).toLocaleDateString()}
                     </small>
                   </p>
+
+                  {/* Edit / Delete Buttons */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "12px",
+                    }}
+                  >
+                    <button
+                      onClick={() => handleEditClick(product)}
+                      style={{
+                        background: "#007bff",
+                        color: "#fff",
+                        border: "none",
+                        padding: "6px 12px",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      style={{
+                        background: "#dc3545",
+                        color: "#fff",
+                        border: "none",
+                        padding: "6px 12px",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Edit Modal */}
+      {editingProduct && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.4)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              padding: "25px",
+              borderRadius: "10px",
+              width: "400px",
+              maxWidth: "90%",
+            }}
+          >
+            <h3 style={{ marginBottom: "15px", textAlign: "center" }}>
+              Edit Product
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <input
+                placeholder="Title"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+              <input
+                placeholder="Category"
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              />
+              <input
+                placeholder="Brand"
+                value={form.brand}
+                onChange={(e) => setForm({ ...form, brand: e.target.value })}
+              />
+              <input
+                placeholder="Price"
+                type="number"
+                value={form.price}
+                onChange={(e) => setForm({ ...form, price: e.target.value })}
+              />
+              <textarea
+                placeholder="Description"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+              />
+            </div>
+            <div
+              style={{
+                marginTop: "15px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <button
+                onClick={handleSaveEdit}
+                style={{
+                  background: "#28a745",
+                  color: "#fff",
+                  border: "none",
+                  padding: "8px 14px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setEditingProduct(null)}
+                style={{
+                  background: "#6c757d",
+                  color: "#fff",
+                  border: "none",
+                  padding: "8px 14px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
