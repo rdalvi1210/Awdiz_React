@@ -5,6 +5,7 @@ const Register = () => {
   const [userData, setUserData] = useState({
     name: "",
     email: "",
+    role: "",
     password: "",
     cpassword: "",
   });
@@ -22,6 +23,7 @@ const Register = () => {
     if (!userData.name) newErrors.name = "Name is required";
     if (!userData.email) newErrors.email = "Email is required";
     if (!userData.password) newErrors.password = "Password is required";
+    if (!userData.role) newErrors.role = "Role is required";
     if (!userData.cpassword)
       newErrors.cpassword = "Confirm password is required";
     if (
@@ -36,13 +38,11 @@ const Register = () => {
       setError(newErrors);
       return;
     }
-
     try {
       const res = await axios.post(
         "http://localhost:3000/api/v1/auth/register",
         userData
       );
-      console.log(res);
       if (res.data.success) {
         alert(res.data.message);
         setUserData({ name: "", email: "", password: "", cpassword: "" });
@@ -59,6 +59,7 @@ const Register = () => {
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
     setError({ ...error, [e.target.name]: "" });
+    console.log(userData);
   };
 
   return (
@@ -99,6 +100,24 @@ const Register = () => {
           />
           {error.email && (
             <p style={{ color: "red", fontSize: "0.9em" }}>{error.email}</p>
+          )}
+        </div>
+
+        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+          <label htmlFor="role">Role:</label>
+          <select
+            id="role"
+            name="role"
+            value={userData.role}
+            onChange={handleChange}
+            style={{ marginLeft: "8px" }}
+          >
+            <option value="">Select role</option>
+            <option value="user">User</option>
+            <option value="seller">Seller</option>
+          </select>
+          {error.role && (
+            <p style={{ color: "red", fontSize: "0.9em" }}>{error.role}</p>
           )}
         </div>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import api from "../axios/AxiosInstance.js";
 import { login } from "../redux/userSlice.js";
 
@@ -8,13 +9,11 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const [error, setError] = useState({});
   const [passhandle, setPasshandle] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-
-  console.log(user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,13 +28,12 @@ const Login = () => {
     }
 
     try {
-      const res = await api.post(
-        "/auth/login",
-        userData
-      );
+      const res = await api.post("/auth/login", userData);
 
       if (res.data.success) {
         dispatch(login(res.data.user));
+        console.log(res.data.user)
+        navigate("/");
         alert(res.data.message);
         setUserData({ email: "", password: "" });
         setError({});
