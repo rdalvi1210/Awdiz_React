@@ -7,7 +7,9 @@ import api from "./axios/AxiosInstance";
 import AddProduct from "./pages/AddProduct";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import MyCart from "./pages/Mycart";
 import Register from "./pages/Register";
+import ViewAllProducts from "./pages/ViewAllproducts";
 import ViewProducts from "./pages/ViewProducts";
 import { setUser } from "./redux/userSlice";
 
@@ -30,11 +32,20 @@ function App() {
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <Navbar />
+      <h1>
+        {user?.role === "user"
+          ? "User Page"
+          : user?.role === "seller"
+          ? "Seller Page"
+          : ""}
+      </h1>
       <h1>Hello, {user?.name}</h1>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/viewproducts" element={<ViewProducts />} />
+        <Route path="/viewallproducts" element={<ViewAllProducts />} />
+        <Route path="/mycart" element={<MyCart />} />
         {/* <Route path="/prac" element={<Prac />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

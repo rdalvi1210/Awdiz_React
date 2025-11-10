@@ -38,17 +38,21 @@ const Navbar = () => {
         <>
           <button onClick={handleLogout}>Logout</button>
 
-          {user.role === "user" && (
-            <button onClick={() => navigate("/profile")}>Profile</button>
+          {user?.role === "user" && (
+            <button onClick={() => navigate("/viewallproducts")}>
+              View Products
+            </button>
           )}
-
-          {user.role === "admin" && (
+          {user?.role === "user" && (
+            <button onClick={() => navigate("/mycart")}>My Cart</button>
+          )}
+          {user?.role === "admin" && (
             <button onClick={() => navigate("/admin")}>Admin Panel</button>
           )}
-          {user.role === "seller" && (
+          {user?.role === "seller" && (
             <button onClick={() => navigate("/addproduct")}>Add Product</button>
           )}
-          {user.role === "seller" && (
+          {user?.role === "seller" && (
             <button onClick={() => navigate("/viewproducts")}>
               View Products
             </button>

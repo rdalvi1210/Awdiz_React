@@ -15,6 +15,8 @@ const ProductForm = () => {
 
   const [error, setError] = useState({});
 
+  const categories = ["shoes", "shirts", "t-shirts", "jeans"];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let newErrors = {};
@@ -92,16 +94,22 @@ const ProductForm = () => {
           {error.title && <p style={{ color: "red" }}>{error.title}</p>}
         </div>
 
-        {/* Category Field */}
+        {/* Category Dropdown */}
         <div style={{ marginBottom: "12px", textAlign: "left" }}>
           <label>Category:</label>
-          <input
+          <select
             name="category"
             value={productData.category}
             onChange={handleChange}
-            type="text"
             style={{ width: "95%", padding: "8px" }}
-          />
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
           {error.category && <p style={{ color: "red" }}>{error.category}</p>}
         </div>
 
