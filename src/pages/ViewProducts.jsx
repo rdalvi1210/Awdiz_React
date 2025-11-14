@@ -7,6 +7,7 @@ const ViewProducts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editingProduct, setEditingProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -58,8 +59,7 @@ const ViewProducts = () => {
       stock: product.stock,
     });
 
-    const modal = new bootstrap.Modal(document.getElementById("editModal"));
-    modal.show();
+    setShowModal(true);
   };
 
   const handleSaveEdit = async () => {
@@ -75,17 +75,13 @@ const ViewProducts = () => {
         prev.map((p) => (p._id === editingProduct._id ? { ...p, ...form } : p))
       );
 
-      const modal = bootstrap.Modal.getInstance(
-        document.getElementById("editModal")
-      );
-      modal.hide();
+      setShowModal(false);
     } catch (err) {
       alert(err.response?.data?.message || "Error updating product");
     }
   };
 
   if (loading) return <p className="text-center mt-5">Loading...</p>;
-
   if (error) return <p className="text-center text-danger mt-5">{error}</p>;
 
   return (
@@ -167,92 +163,90 @@ const ViewProducts = () => {
         </div>
       )}
 
-      {/* BOOTSTRAP MODAL */}
-      <div className="modal fade" id="editModal" tabIndex="-1">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Edit Product</h5>
+      {/* PURE REACT MODAL */}
+      {showModal && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+          style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}
+        >
+          <div
+            className="bg-white p-4 rounded shadow"
+            style={{ width: "400px" }}
+          >
+            <h5 className="mb-3">Edit Product</h5>
+
+            <div className="mb-2">
+              <label className="form-label">Title</label>
+              <input
+                className="form-control"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="form-label">Category</label>
+              <input
+                className="form-control"
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="form-label">Brand</label>
+              <input
+                className="form-control"
+                value={form.brand}
+                onChange={(e) => setForm({ ...form, brand: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="form-label">Price</label>
+              <input
+                type="number"
+                className="form-control"
+                value={form.price}
+                onChange={(e) => setForm({ ...form, price: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="form-label">Stock</label>
+              <input
+                type="number"
+                className="form-control"
+                value={form.stock}
+                onChange={(e) => setForm({ ...form, stock: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="form-label">Description</label>
+              <textarea
+                className="form-control"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="d-flex justify-content-end gap-2 mt-3">
               <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-
-            <div className="modal-body">
-              <div className="mb-2">
-                <label className="form-label">Title</label>
-                <input
-                  className="form-control"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </div>
-
-              <div className="mb-2">
-                <label className="form-label">Category</label>
-                <input
-                  className="form-control"
-                  value={form.category}
-                  onChange={(e) =>
-                    setForm({ ...form, category: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="mb-2">
-                <label className="form-label">Brand</label>
-                <input
-                  className="form-control"
-                  value={form.brand}
-                  onChange={(e) => setForm({ ...form, brand: e.target.value })}
-                />
-              </div>
-
-              <div className="mb-2">
-                <label className="form-label">Price</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={form.price}
-                  onChange={(e) => setForm({ ...form, price: e.target.value })}
-                />
-              </div>
-
-              <div className="mb-2">
-                <label className="form-label">Stock</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={form.stock}
-                  onChange={(e) => setForm({ ...form, stock: e.target.value })}
-                />
-              </div>
-
-              <div className="mb-2">
-                <label className="form-label">Description</label>
-                <textarea
-                  className="form-control"
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
-                ></textarea>
-              </div>
-            </div>
-
-            <div className="modal-footer">
+                className="btn btn-secondary"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
               <button className="btn btn-success" onClick={handleSaveEdit}>
                 Save
-              </button>
-              <button className="btn btn-secondary" data-bs-dismiss="modal">
-                Cancel
               </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
