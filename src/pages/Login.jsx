@@ -32,8 +32,7 @@ const Login = () => {
 
       if (res.data.success) {
         dispatch(login(res.data.user));
-        console.log(res.data.user)
-        navigate("/");
+        navigate("/viewallproducts");
         alert(res.data.message);
         setUserData({ email: "", password: "" });
         setError({});

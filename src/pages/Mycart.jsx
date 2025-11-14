@@ -2,24 +2,25 @@ import { useEffect, useState } from "react";
 import api from "../axios/AxiosInstance";
 
 const MyCart = () => {
-  const [cart, setCart] = useState([]);
+  const [items, setItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  // Fetch user's cart
   const fetchCart = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/carts/getcart"); // ✅ token in cookies handles req.userId automatically
+      const res = await api.get("/carts/getcart");
+
       if (res.data.success) {
-        setCart(res.data.cart.products || []);
+        setItems(res.data.cart);
+        setTotalPrice(res.data.totalPrice);
       } else {
-        setError(res.data.message || "Failed to fetch cart.");
+        setError(res.data.message);
       }
     } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || "Server error fetching cart.");
+      setError(err.response?.data?.message || "Error fetching cart.");
     } finally {
       setLoading(false);
     }
@@ -29,212 +30,137 @@ const MyCart = () => {
     fetchCart();
   }, []);
 
-  // Remove product from cart
   const handleRemove = async (productId) => {
     try {
       const res = await api.post("/carts/remove", { productId });
+
       if (res.data.success) {
-        setCart(res.data.cart.products);
-        setMessage("Product removed from cart.");
+        setItems(res.data.cart.items);
+        setTotalPrice(res.data.totalPrice);
+        setMessage("Item removed");
         setTimeout(() => setMessage(""), 1500);
       }
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Error removing product.");
+      alert(err.response?.data?.message || "Error removing item.");
     }
   };
 
-  const totalPrice = cart.reduce(
-    (sum, product) => sum + (product.price || 0),
-    0
-  );
+  const handlePlaceOrder = async () => {
+    try {
+      const res = await api.get("/order/placeorder");
 
-  if (loading)
-    return (
-      <p style={{ textAlign: "center", marginTop: "40px" }}>Loading cart...</p>
-    );
+      if (res.data.success) {
+        setMessage("Order placed!");
+        setItems([]);
+        setTotalPrice(0);
+      }
+    } catch (err) {
+      alert(err.response.data.message);
+    }
+  };
+
+  if (loading) return <p className="text-center mt-5">Loading...</p>;
 
   if (error)
-    return (
-      <p style={{ textAlign: "center", color: "red", marginTop: "40px" }}>
-        {error}
-      </p>
-    );
+    return <p className="text-center mt-5 text-danger fw-bold">{error}</p>;
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        padding: "40px 15px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "20px",
-          background: "#fff",
-          borderRadius: "10px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <h2
-          style={{
-            textAlign: "center",
-            marginBottom: "30px",
-            fontSize: "24px",
-            color: "#333",
-          }}
-        >
-          My Cart
-        </h2>
+    <div className="container py-4">
+      <h2 className="text-center fw-bold mb-4">My Cart</h2>
 
-        {message && (
-          <p
-            style={{
-              textAlign: "center",
-              color: "green",
-              fontWeight: "500",
-              marginBottom: "15px",
-            }}
-          >
-            {message}
-          </p>
-        )}
+      {message && <p className="text-center text-success fw-bold">{message}</p>}
 
-        {cart.length === 0 ? (
-          <p style={{ textAlign: "center" }}>Your cart is empty.</p>
-        ) : (
-          <>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "repeat(auto-fill, minmax(clamp(220px, 30%, 300px), 1fr))",
-                gap: "25px",
-                justifyContent: "left",
-              }}
-            >
-              {cart.map((product) => (
-                <div
-                  key={product._id}
-                  style={{
-                    background: "#fff",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                    cursor: "pointer",
-                    position: "relative",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-6px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 6px 15px rgba(0,0,0,0.1)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 2px 5px rgba(0,0,0,0.05)";
-                  }}
-                >
-                  <img
-                    src={product.imageUrl}
-                    alt={product.title}
-                    style={{
-                      width: "100%",
-                      height: "220px",
-                      objectFit: "cover",
-                      display: "block",
-                      backgroundColor: "#f3f3f3",
-                    }}
-                  />
-                  <div style={{ padding: "15px" }}>
-                    <h4
+      {items?.length === 0 ? (
+        <p className="text-center">Your cart is empty.</p>
+      ) : (
+        <div className="row g-4">
+          {/* LEFT SIDE – CART ITEMS */}
+          <div className="col-lg-8">
+            {items?.map((item) => (
+              <div
+                key={item._id}
+                className="card mb-3 border-0 shadow-sm"
+                style={{ borderRadius: "14px" }}
+              >
+                <div className="row g-0 align-items-center">
+                  {/* RESPONSIVE IMAGE */}
+                  <div className="col-12 col-md-4">
+                    <img
+                      src={item.product.imageUrl}
+                      alt=""
+                      className="img-fluid rounded-start w-100"
                       style={{
-                        marginBottom: "8px",
-                        fontSize: "18px",
-                        color: "#111",
-                        lineHeight: "1.3",
+                        height: "220px",
+                        objectFit: "cover",
                       }}
-                    >
-                      {product.title}
-                    </h4>
-                    <p style={{ margin: "5px 0", color: "#555" }}>
-                      <b>Category:</b> {product.category}
-                    </p>
-                    <p style={{ margin: "5px 0", color: "#555" }}>
-                      <b>Brand:</b> {product.brand}
-                    </p>
-                    <p style={{ margin: "5px 0", color: "#111" }}>
-                      <b>Price:</b> ₹{product.price}
-                    </p>
-                    <p
-                      style={{
-                        margin: "10px 0",
-                        color: "#666",
-                        fontSize: "14px",
-                        minHeight: "40px",
-                      }}
-                    >
-                      <b>Description:</b> {product.description?.slice(0, 60)}...
-                    </p>
+                    />
+                  </div>
 
-                    {/* Remove Button */}
-                    <button
-                      onClick={() => handleRemove(product._id)}
-                      style={{
-                        width: "100%",
-                        background: "#dc3545",
-                        color: "#fff",
-                        border: "none",
-                        padding: "8px 12px",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                        fontWeight: "500",
-                        marginTop: "10px",
-                      }}
-                    >
-                      Remove
-                    </button>
+                  {/* RESPONSIVE DETAILS */}
+                  <div className="col-12 col-md-8">
+                    <div className="card-body">
+                      <h5 className="fw-bold">{item.product.title}</h5>
+
+                      <p className="text-muted mb-1">
+                        Quantity: <b>{item.quantity}</b>
+                      </p>
+
+                      <p className="fw-semibold fs-6">
+                        ₹{item.product.price} × {item.quantity} ={" "}
+                        <span className="text-primary fw-bold">
+                          ₹{item.product.price * item.quantity}
+                        </span>
+                      </p>
+
+                      <button
+                        onClick={() => handleRemove(item.product._id)}
+                        className="btn btn-danger btn-sm"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
 
-            {/* Cart Summary */}
+          {/* RIGHT SIDE – ORDER SUMMARY */}
+          <div className="col-lg-4">
             <div
-              style={{
-                marginTop: "30px",
-                textAlign: "right",
-                borderTop: "1px solid #ddd",
-                paddingTop: "20px",
-              }}
+              className="card shadow-sm p-3 border-0"
+              style={{ borderRadius: "14px" }}
             >
-              <h3 style={{ fontSize: "20px", color: "#333" }}>
-                Total: ₹{totalPrice.toFixed(2)}
-              </h3>
+              <h4 className="fw-bold mb-3">Order Summary</h4>
+
+              <div className="d-flex justify-content-between mb-2">
+                <span className="text-muted">Subtotal</span>
+                <span className="fw-bold">₹{totalPrice}</span>
+              </div>
+
+              <div className="d-flex justify-content-between mb-2">
+                <span className="text-muted">Delivery</span>
+                <span className="text-success fw-bold">FREE</span>
+              </div>
+
+              <hr />
+
+              <div className="d-flex justify-content-between fs-5 fw-bold">
+                <span>Total</span>
+                <span>₹{totalPrice}</span>
+              </div>
+
               <button
-                style={{
-                  marginTop: "15px",
-                  background: "#32C0B7",
-                  color: "#fff",
-                  border: "none",
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  fontSize: "16px",
-                }}
+                onClick={handlePlaceOrder}
+                className="btn btn-primary w-100 mt-3 py-2"
+                style={{ borderRadius: "10px" }}
               >
-                Proceed to Checkout
+                Checkout
               </button>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

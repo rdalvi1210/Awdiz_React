@@ -9,8 +9,7 @@ const ProductForm = () => {
     brand: "",
     description: "",
     price: "",
-    inStock: true,
-    rating: "",
+    stock: "", // 🔥 required field
   });
 
   const [error, setError] = useState({});
@@ -26,6 +25,8 @@ const ProductForm = () => {
     if (!productData.imageUrl) newErrors.imageUrl = "Image URL is required";
     if (!productData.brand) newErrors.brand = "Brand is required";
     if (!productData.price) newErrors.price = "Price is required";
+    if (!productData.stock && productData.stock !== 0)
+      newErrors.stock = "Stock is required";
     if (!productData.description)
       newErrors.description = "Description is required";
 
@@ -36,12 +37,14 @@ const ProductForm = () => {
 
     try {
       const res = await api.post(
-        "http://localhost:3000/api/v1/products/addproducts",
+        "http://localhost:3000/api/v1/seller/addProducts",
         productData
       );
 
       if (res.data.success) {
         alert(res.data.message || "Product added successfully");
+
+        // Reset form
         setProductData({
           title: "",
           category: "",
@@ -49,9 +52,9 @@ const ProductForm = () => {
           brand: "",
           description: "",
           price: "",
-          inStock: true,
-          rating: "",
+          stock: "",
         });
+
         setError({});
       } else {
         alert(res.data.message || "Something went wrong");
@@ -62,12 +65,14 @@ const ProductForm = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
+
     setProductData({
       ...productData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     });
-    setError({ ...error, [name]: "" });
+
+    setError((prev) => ({ ...prev, [name]: "" }));
   };
 
   return (
@@ -80,9 +85,10 @@ const ProductForm = () => {
       }}
     >
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Add Product</h2>
+
       <form onSubmit={handleSubmit}>
-        {/* Title Field */}
-        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+        {/* Title */}
+        <div style={{ marginBottom: "12px" }}>
           <label>Title:</label>
           <input
             name="title"
@@ -94,8 +100,8 @@ const ProductForm = () => {
           {error.title && <p style={{ color: "red" }}>{error.title}</p>}
         </div>
 
-        {/* Category Dropdown */}
-        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+        {/* Category */}
+        <div style={{ marginBottom: "12px" }}>
           <label>Category:</label>
           <select
             name="category"
@@ -113,8 +119,8 @@ const ProductForm = () => {
           {error.category && <p style={{ color: "red" }}>{error.category}</p>}
         </div>
 
-        {/* Brand Field */}
-        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+        {/* Brand */}
+        <div style={{ marginBottom: "12px" }}>
           <label>Brand:</label>
           <input
             name="brand"
@@ -126,8 +132,8 @@ const ProductForm = () => {
           {error.brand && <p style={{ color: "red" }}>{error.brand}</p>}
         </div>
 
-        {/* Image URL Field */}
-        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+        {/* Image URL */}
+        <div style={{ marginBottom: "12px" }}>
           <label>Image URL:</label>
           <input
             name="imageUrl"
@@ -139,23 +145,23 @@ const ProductForm = () => {
           {error.imageUrl && <p style={{ color: "red" }}>{error.imageUrl}</p>}
         </div>
 
-        {/* Description Field */}
-        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+        {/* Description */}
+        <div style={{ marginBottom: "12px" }}>
           <label>Description:</label>
           <textarea
             name="description"
             value={productData.description}
             onChange={handleChange}
             rows="3"
-            style={{ width: "95%", padding: "8px", resize: "none" }}
+            style={{ width: "95%", padding: "8px" }}
           ></textarea>
           {error.description && (
             <p style={{ color: "red" }}>{error.description}</p>
           )}
         </div>
 
-        {/* Price Field */}
-        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+        {/* Price */}
+        <div style={{ marginBottom: "12px" }}>
           <label>Price:</label>
           <input
             name="price"
@@ -168,8 +174,22 @@ const ProductForm = () => {
           {error.price && <p style={{ color: "red" }}>{error.price}</p>}
         </div>
 
-        {/* Submit Button */}
-        <input
+        {/* Stock */}
+        <div style={{ marginBottom: "12px" }}>
+          <label>Stock:</label>
+          <input
+            name="stock"
+            value={productData.stock}
+            onChange={handleChange}
+            type="number"
+            min="0"
+            style={{ width: "95%", padding: "8px" }}
+          />
+          {error.stock && <p style={{ color: "red" }}>{error.stock}</p>}
+        </div>
+
+        {/* Submit */}
+        <input  
           type="submit"
           value="Submit"
           style={{

@@ -46,6 +46,9 @@ const Navbar = () => {
           {user?.role === "user" && (
             <button onClick={() => navigate("/mycart")}>My Cart</button>
           )}
+          {user?.role === "user" && (
+            <button onClick={() => navigate("/orders")}>My Orders</button>
+          )}
           {user?.role === "admin" && (
             <button onClick={() => navigate("/admin")}>Admin Panel</button>
           )}
@@ -56,6 +59,9 @@ const Navbar = () => {
             <button onClick={() => navigate("/viewproducts")}>
               View Products
             </button>
+          )}
+          {user?.role === "seller" && (
+            <button onClick={() => navigate("/sellerorders")}>Orders</button>
           )}
         </>
       )}

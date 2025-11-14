@@ -8,7 +8,9 @@ import AddProduct from "./pages/AddProduct";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyCart from "./pages/Mycart";
+import MyOrders from "./pages/Orders";
 import Register from "./pages/Register";
+import SellerOrders from "./pages/SellerOrders";
 import ViewAllProducts from "./pages/ViewAllproducts";
 import ViewProducts from "./pages/ViewProducts";
 import { setUser } from "./redux/userSlice";
@@ -49,6 +51,8 @@ function App() {
         {/* <Route path="/prac" element={<Prac />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/orders" element={<MyOrders />} />
+        <Route path="/sellerorders" element={<SellerOrders />} />
         {/* <Route path="/use-state" element={<UseState />} />
         <Route path="/use-effect" element={<Useeffect />} />
         <Route path="/use-params" element={<Useparams />} />
