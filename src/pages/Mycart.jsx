@@ -35,7 +35,8 @@ const MyCart = () => {
       const res = await api.post("/carts/remove", { productId });
 
       if (res.data.success) {
-        setItems(res.data.cart.items);
+        console.log(res.data.cart)
+        setItems(res.data.cart);
         setTotalPrice(res.data.totalPrice);
         setMessage("Item removed");
         setTimeout(() => setMessage(""), 1500);

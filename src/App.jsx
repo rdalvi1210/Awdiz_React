@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import api from "./axios/AxiosInstance";
 import AddProduct from "./pages/AddProduct";
+import BlogPage from "./pages/Blogpage";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyCart from "./pages/Mycart";
@@ -45,6 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/addproduct" element={<AddProduct />} />
+        <Route path="/blog" element={<BlogPage />} />
         <Route path="/viewproducts" element={<ViewProducts />} />
         <Route path="/viewallproducts" element={<ViewAllProducts />} />
         <Route path="/mycart" element={<MyCart />} />
